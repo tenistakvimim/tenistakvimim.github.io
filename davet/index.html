@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Takım daveti · Tenis Takvimim</title>
+<meta name="description" content="Takımının maçları tek dokunuşla takvimine gelsin.">
+<meta property="og:title" content="🎾 Takımına davet edildin">
+<meta property="og:description" content="Tenis Takvimim'de takımın ortak takvimine katılmak için dokun.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://tenistakvimim.github.io/icon.png">
+<meta name="theme-color" content="#12161C">
+<link rel="icon" href="../icon.png">
+<link rel="apple-touch-icon" href="../icon.png">
+<style>
+  :root { --bg:#F5F6F1; --ink:#12161C; --ball:#D9F24A; --muted:#5B6470; --card:#FFFFFF; --line:#E3E6DE; --on-dark:#DDE1D8; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--bg); color: var(--ink); font: 16px/1.45 -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif; min-height: 100vh; display: flex; justify-content: center; padding: 24px 16px calc(24px + env(safe-area-inset-bottom)); }
+  main { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 14px; }
+  .hero { background: var(--ink); color: #fff; border-radius: 24px; padding: 24px 20px 20px; display: flex; flex-direction: column; gap: 12px; }
+  .ball { width: 52px; height: 52px; border-radius: 16px; background: var(--ball); display: grid; place-items: center; font-size: 28px; }
+  h1 { margin: 0; font-size: 26px; line-height: 1.15; letter-spacing: -0.02em; }
+  .hero p { margin: 0; color: var(--on-dark); font-size: 15px; }
+  .code { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: rgba(255,255,255,0.08); border-radius: 14px; padding: 12px 14px; }
+  .code small { display: block; color: var(--on-dark); font-size: 12px; font-weight: 600; }
+  .code b { font-size: 26px; letter-spacing: 0.06em; font-variant-numeric: tabular-nums; }
+  .copy { appearance: none; border: 1px solid rgba(255,255,255,0.3); background: transparent; color: #fff; font: inherit; font-size: 14px; font-weight: 700; border-radius: 12px; padding: 9px 12px; cursor: pointer; }
+  .btn { display: flex; align-items: center; justify-content: center; height: 56px; border-radius: 16px; background: var(--ball); color: var(--ink); font-size: 17px; font-weight: 800; text-decoration: none; }
+  .btn:active { transform: scale(0.98); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 16px; }
+  .card h2 { margin: 0 0 6px; font-size: 16px; }
+  .card p, .card li { margin: 0; color: var(--muted); font-size: 14px; }
+  ol { margin: 6px 0 0; padding-left: 20px; display: grid; gap: 4px; }
+  .bad { display: none; }
+  body.invalid .ok { display: none; }
+  body.invalid .bad { display: block; }
+  footer { display: flex; flex-wrap: wrap; gap: 6px 16px; justify-content: center; font-size: 14px; color: var(--muted); padding-top: 4px; }
+  footer a { color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <section class="hero ok">
+    <div class="ball" aria-hidden="true">🎾</div>
+    <h1>Takımına davet edildin</h1>
+    <p>Katılınca takımın maçları takvimine gelir. Kadro ve hatırlatmaların sana özel kalır.</p>
+    <div class="code">
+      <div><small>Takım kodu</small><b id="kod">—</b></div>
+      <button class="copy" id="copy" type="button">Kopyala</button>
+    </div>
+    <a class="btn" id="open" href="#">Uygulamada aç ve katıl</a>
+  </section>
+
+  <section class="card ok">
+    <h2>Uygulama açılmadı mı?</h2>
+    <ol>
+      <li>Tenis Takvimim şu an test aşamasında. Kaptanından TestFlight daveti iste ve uygulamayı kur.</li>
+      <li>Sonra bu linke tekrar dokun ya da uygulamada <b>Kulüpler → Ortak takım → Takıma katıl</b>’a kodu yaz.</li>
+    </ol>
+  </section>
+
+  <section class="hero bad">
+    <div class="ball" aria-hidden="true">🎾</div>
+    <h1>Davet linki eksik</h1>
+    <p>Linkte takım kodu yok. Kaptanından linki tekrar göndermesini iste.</p>
+  </section>
+  <footer>
+    <a href="../tr/">Tenis Takvimim</a>
+    <a href="../tr/support.html">Destek</a>
+    <a href="../tr/privacy.html">Gizlilik</a>
+  </footer>
+</main>
+<script>
+  (function () {
+    var q = new URLSearchParams(location.search);
+    var kod = (q.get('kod') || '').trim().toUpperCase();
+    if (!/^[A-Z]{3}-\d{4}$/.test(kod)) { document.body.classList.add('invalid'); return; }
+    var scheme = q.get('dev') === '1' ? 'tenistakvimim-dev' : 'tenistakvimim';
+    document.getElementById('kod').textContent = kod;
+    document.getElementById('open').href = scheme + '://katil?kod=' + encodeURIComponent(kod);
+    var copy = document.getElementById('copy');
+    copy.addEventListener('click', function () {
+      var done = function () { copy.textContent = 'Kopyalandı'; setTimeout(function () { copy.textContent = 'Kopyala'; }, 1600); };
+      if (navigator.clipboard) navigator.clipboard.writeText(kod).then(done, function () {});
+    });
+  })();
+</script>
+</body>
+</html>

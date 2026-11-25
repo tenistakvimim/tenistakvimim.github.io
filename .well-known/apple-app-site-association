@@ -1,0 +1,17 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "HNYH3B28X6.com.tenistakvimim.app"
+        ],
+        "components": [
+          {
+            "/": "/davet/*",
+            "comment": "Team invites (app/katil.tsx). Nothing else on the site opens the app."
+          }
+        ]
+      }
+    ]
+  }
+}
